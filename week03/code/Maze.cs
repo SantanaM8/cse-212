@@ -3,115 +3,73 @@ using System.Collections.Generic;
 
 public class Maze
 {
-    // Dictionary to store maze structure
-    // Key: (x, y) coordinate
-    // Value: (canMoveLeft, canMoveRight, canMoveUp, canMoveDown)
-    private readonly Dictionary<(int, int), (bool, bool, bool, bool)> _mazeMap;
-    
-    // Current position in the maze
+    // Key: (x, y)
+    //
+    // Value:
+    // [0] = left
+    // [1] = right
+    // [2] = up
+    // [3] = down
+    private readonly Dictionary<(int, int), bool[]> _mazeMap;
+
     public int CurrX { get; private set; }
     public int CurrY { get; private set; }
 
-    public Maze(Dictionary<(int, int), (bool, bool, bool, bool)> mazeMap)
+    public Maze(Dictionary<(int, int), bool[]> mazeMap)
     {
         _mazeMap = mazeMap;
+
+        // Posição inicial
         CurrX = 1;
         CurrY = 1;
     }
 
-    /// <summary>
-    /// Move left in the maze if possible
-    /// </summary>
-    public bool MoveLeft()
+    public void MoveLeft()
     {
-        // Check if current position exists in maze
         if (!_mazeMap.ContainsKey((CurrX, CurrY)))
-            return false;
-        
-        // Get the valid movements from current position
-        var (canMoveLeft, _, _, _) = _mazeMap[(CurrX, CurrY)];
-        
-        // If we can move left, update position
-        if (canMoveLeft)
-        {
-            CurrX--;
-            return true;
-        }
-        
-        return false;
+            throw new InvalidOperationException("Can't go that way!");
+
+        if (!_mazeMap[(CurrX, CurrY)][0])
+            throw new InvalidOperationException("Can't go that way!");
+
+        CurrX--;
     }
 
-    /// <summary>
-    /// Move right in the maze if possible
-    /// </summary>
-    public bool MoveRight()
+    public void MoveRight()
     {
-        // Check if current position exists in maze
         if (!_mazeMap.ContainsKey((CurrX, CurrY)))
-            return false;
-        
-        // Get the valid movements from current position
-        var (_, canMoveRight, _, _) = _mazeMap[(CurrX, CurrY)];
-        
-        // If we can move right, update position
-        if (canMoveRight)
-        {
-            CurrX++;
-            return true;
-        }
-        
-        return false;
+            throw new InvalidOperationException("Can't go that way!");
+
+        if (!_mazeMap[(CurrX, CurrY)][1])
+            throw new InvalidOperationException("Can't go that way!");
+
+        CurrX++;
     }
 
-    /// <summary>
-    /// Move up in the maze if possible
-    /// </summary>
-    public bool MoveUp()
+    public void MoveUp()
     {
-        // Check if current position exists in maze
         if (!_mazeMap.ContainsKey((CurrX, CurrY)))
-            return false;
-        
-        // Get the valid movements from current position
-        var (_, _, canMoveUp, _) = _mazeMap[(CurrX, CurrY)];
-        
-        // If we can move up, update position
-        if (canMoveUp)
-        {
-            CurrY--;
-            return true;
-        }
-        
-        return false;
+            throw new InvalidOperationException("Can't go that way!");
+
+        if (!_mazeMap[(CurrX, CurrY)][2])
+            throw new InvalidOperationException("Can't go that way!");
+
+        CurrY--;
     }
 
-    /// <summary>
-    /// Move down in the maze if possible
-    /// </summary>
-    public bool MoveDown()
+    public void MoveDown()
     {
-        // Check if current position exists in maze
         if (!_mazeMap.ContainsKey((CurrX, CurrY)))
-            return false;
-        
-        // Get the valid movements from current position
-        var (_, _, _, canMoveDown) = _mazeMap[(CurrX, CurrY)];
-        
-        // If we can move down, update position
-        if (canMoveDown)
-        {
-            CurrY++;
-            return true;
-        }
-        
-        return false;
+            throw new InvalidOperationException("Can't go that way!");
+
+        if (!_mazeMap[(CurrX, CurrY)][3])
+            throw new InvalidOperationException("Can't go that way!");
+
+        CurrY++;
     }
 
-    /// <summary>
-    /// Display the current position
-    /// </summary>
-    public void ShowStatus()
+    public string GetStatus()
     {
-        Console.WriteLine($"Current position: ({CurrX}, {CurrY})");
+        return $"Current location (x={CurrX}, y={CurrY})";
     }
 }
